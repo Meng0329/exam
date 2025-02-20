@@ -1,0 +1,55 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.CourseMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Course">
+        select course.*, teacher.name as teacherName from `course`
+        left join teacher on course.teacher_id = teacher.id
+        <where>
+            <if test="name != null"> and course.name like concat('%', #{name}, '%')</if>
+            <if test="teacherId != null"> and teacher_id = #{teacherId}</if>
+        </where>
+    </select>
+
+    <delete id="deleteById">
+        delete from `course`
+        where id = #{id}
+    </delete>
+
+    <!-- insert into course (username, password, ...) values ('course', 'course', ...) -->
+    <insert id="insert" parameterType="com.example.entity.Course" useGeneratedKeys="true">
+        insert into `course`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="img != null">img,</if>
+            <if test="score != null">score,</if>
+            <if test="teacherId != null">teacher_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="img != null">#{img},</if>
+            <if test="score != null">#{score},</if>
+            <if test="teacherId != null">#{teacherId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Course">
+        update `course`
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="img != null">
+                img = #{img},
+            </if>
+            <if test="score != null">
+                score = #{score},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,46 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.QuestionTypeMapper">
+
+    <select id="selectAll" resultType="com.example.entity.QuestionType">
+        select * from `question_type`
+        <where>
+            <if test="name != null"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+
+    <delete id="deleteById">
+        delete from `question_type`
+        where id = #{id}
+    </delete>
+
+    <!-- insert into question_type (username, password, ...) values ('question_type', 'question_type', ...) -->
+    <insert id="insert" parameterType="com.example.entity.QuestionType" useGeneratedKeys="true">
+        insert into `question_type`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="score != null">score,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="score != null">#{score},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.QuestionType">
+        update `question_type`
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="score != null">
+                score = #{score},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

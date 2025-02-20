@@ -1,0 +1,61 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.TestPaperMapper">
+
+    <select id="selectAll" resultType="com.example.entity.TestPaper">
+        select test_paper.*, course.name as courseName, course.img as courseImg,
+               teacher.name as teacherName, teacher.avatar as teacherAvatar
+        from `test_paper`
+        left join course on test_paper.course_id = course.id
+        left join teacher on test_paper.teacher_id = teacher.id
+        <where>
+            <if test="name != null"> and test_paper.name like concat('%', #{name}, '%')</if>
+            <if test="teacherId != null"> and test_paper.teacher_id = #{teacherId}</if>
+            <if test="courseName != null"> and course.name like concat('%', #{courseName}, '%')</if>
+        </where>
+    </select>
+
+    <delete id="deleteById">
+        delete from `test_paper`
+        where id = #{id}
+    </delete>
+
+    <!-- insert into test_paper (username, password, ...) values ('test_paper', 'test_paper', ...) -->
+    <insert id="insert" parameterType="com.example.entity.TestPaper" useGeneratedKeys="true">
+        insert into `test_paper`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="courseId != null">course_id,</if>
+            <if test="teacherId != null">teacher_id,</if>
+            <if test="type != null">type,</if>
+            <if test="start != null">start,</if>
+            <if test="end != null">end,</if>
+            <if test="time != null">time,</if>
+            <if test="questionIds != null">question_ids,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="courseId != null">#{courseId},</if>
+            <if test="teacherId != null">#{teacherId},</if>
+            <if test="type != null">#{type},</if>
+            <if test="start != null">#{start},</if>
+            <if test="end != null">#{end},</if>
+            <if test="time != null">#{time},</if>
+            <if test="questionIds != null">#{questionIds},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.TestPaper">
+        update `test_paper`
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

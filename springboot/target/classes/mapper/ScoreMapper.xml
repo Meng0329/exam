@@ -1,0 +1,66 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ScoreMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Score">
+        select score.*, course.name as courseName, teacher.name as teacherName, student.name as studentName from `score`
+        left join course on score.course_id = course.id
+        left join teacher on score.teacher_id = teacher.id
+        left join student on score.student_id = student.id
+        <where>
+            <if test="name != null"> and score.name like concat('%', #{name}, '%')</if>
+            <if test="studentId != null"> and score.student_id = #{studentId}</if>
+            <if test="teacherId != null"> and score.teacher_id = #{teacherId}</if>
+            <if test="paperId != null"> and score.paper_id = #{paperId}</if>
+            <if test="courseName != null"> and course.name like concat('%', #{courseName}, '%')</if>
+            <if test="status != null"> and score.status = #{status}</if>
+        </where>
+    </select>
+
+    <delete id="deleteById">
+        delete from `score`
+        where id = #{id}
+    </delete>
+
+    <!-- insert into score (username, password, ...) values ('score', 'score', ...) -->
+    <insert id="insert" parameterType="com.example.entity.Score" useGeneratedKeys="true">
+        insert into `score`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="courseId != null">course_id,</if>
+            <if test="teacherId != null">teacher_id,</if>
+            <if test="studentId != null">student_id,</if>
+            <if test="paperId != null">paper_id,</if>
+            <if test="score != null">score,</if>
+            <if test="status != null">status,</if>
+            <if test="answer != null">answer,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="courseId != null">#{courseId},</if>
+            <if test="teacherId != null">#{teacherId},</if>
+            <if test="studentId != null">#{studentId},</if>
+            <if test="paperId != null">#{paperId},</if>
+            <if test="score != null">#{score},</if>
+            <if test="status != null">#{status},</if>
+            <if test="answer != null">#{answer},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Score">
+        update `score`
+        <set>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

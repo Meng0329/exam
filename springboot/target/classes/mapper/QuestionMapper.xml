@@ -1,0 +1,86 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.QuestionMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Question">
+        select
+            question.*, course.name as courseName, teacher.name as teacherName,
+            question_type.name as typeName, question_type.score as typeScore
+        from `question`
+        left join course on question.course_id = course.id
+        left join teacher on question.teacher_id = teacher.id
+        left join question_type on question.type_id = question_type.id
+        <where>
+            <if test="name != null"> and question.name like concat('%', #{name}, '%')</if>
+            <if test="teacherId != null"> and question.teacher_id = #{teacherId}</if>
+            <if test="courseId != null"> and question.course_id = #{courseId}</if>
+        </where>
+    </select>
+
+    <delete id="deleteById">
+        delete from `question`
+        where id = #{id}
+    </delete>
+
+    <!-- insert into question (username, password, ...) values ('question', 'question', ...) -->
+    <insert id="insert" parameterType="com.example.entity.Question" useGeneratedKeys="true">
+        insert into `question`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null">name,</if>
+            <if test="courseId != null">course_id,</if>
+            <if test="teacherId != null">teacher_id,</if>
+            <if test="typeId != null">type_id,</if>
+            <if test="optionA != null">option_a,</if>
+            <if test="optionB != null">option_b,</if>
+            <if test="optionC != null">option_c,</if>
+            <if test="optionD != null">option_d,</if>
+            <if test="answer != null">answer,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null">#{name},</if>
+            <if test="courseId != null">#{courseId},</if>
+            <if test="teacherId != null">#{teacherId},</if>
+            <if test="typeId != null">#{typeId},</if>
+            <if test="optionA != null">#{optionA},</if>
+            <if test="optionB != null">#{optionA},</if>
+            <if test="optionC != null">#{optionC},</if>
+            <if test="optionD != null">#{optionD},</if>
+            <if test="answer != null">#{answer},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Question">
+        update `question`
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="courseId != null">
+                course_id = #{courseId},
+            </if>
+            <if test="typeId != null">
+                type_id = #{typeId},
+            </if>
+            <if test="optionA != null">
+                option_a = #{optionA},
+            </if>
+            <if test="optionB != null">
+                option_b = #{optionB},
+            </if>
+            <if test="optionC != null">
+                option_c = #{optionC},
+            </if>
+            <if test="optionD != null">
+                option_d = #{optionD},
+            </if>
+            <if test="answer != null">
+                answer = #{answer},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

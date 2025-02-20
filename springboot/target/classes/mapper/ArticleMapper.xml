@@ -1,0 +1,60 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ArticleMapper">
+
+    <select id="selectAll" resultType="com.example.entity.Article">
+        select article.*, student.name as studentName, student.avatar as studentAvatar from `article`
+        left join student on article.student_id = student.id
+        <where>
+            <if test="title != null"> and title like concat('%', #{title}, '%')</if>
+            <if test="studentId != null"> and student_id = #{studentId}</if>
+        </where>
+    </select>
+
+    <delete id="deleteById">
+        delete from `article`
+        where id = #{id}
+    </delete>
+
+    <!-- insert into article (username, password, ...) values ('article', 'article', ...) -->
+    <insert id="insert" parameterType="com.example.entity.Article" useGeneratedKeys="true">
+        insert into `article`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="time != null">time,</if>
+            <if test="img != null">img,</if>
+            <if test="studentId != null">student_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="time != null">#{time},</if>
+            <if test="img != null">#{img},</if>
+            <if test="studentId != null">#{studentId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Article">
+        update `article`
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="img != null">
+                img = #{img},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
